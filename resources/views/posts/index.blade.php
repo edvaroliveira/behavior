@@ -31,7 +31,7 @@
             <h2>{{ $post->subtitle }}</h2>
             <p>{{ $post->description }}</p>
             <small>Criado em: {{ date('d/m/Y H:i', strtotime($post->created_at)) }} - Editado em: {{ date('d/m/Y H:i', strtotime($post->updated_at)) }} </small>
-            <p><a href="{{ route('post.edit', ['post'=> $post->id ]) }}" class="btn btn-primary">Editar</a></p>
+            <p><a href="{{ route('post.edit', ['post'=> $post->id ]) }}" class="btn btn-primary"> Editar</a></p>
         </article>
         <hr>
 
