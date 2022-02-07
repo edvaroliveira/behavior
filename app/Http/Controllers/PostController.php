@@ -7,6 +7,30 @@ use LaraDev\Models\Post;
 
 class PostController extends Controller
 {
+
+    public function forceDelete($post)
+    {
+        Post::onlyTrashed()->where(['id' => $post])->forceDelete();
+        return redirect()->route('post.trashed');
+    }
+
+    public function restore($post)
+    {
+        $post = Post::onlyTrashed()->where(['id' => $post])->first();
+
+        if ($post->trashed()) {
+            $post->restore();
+        }
+
+        return redirect()->route('post.trashed');
+    }
+
+
+    public function trashed()
+    {
+        $posts = Post::onlyTrashed()->get();
+        return view('posts.trashed', ['posts' => $posts]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -29,12 +53,10 @@ class PostController extends Controller
         // echo "<h2> {$post->subtitle}</h2>";
         // echo "<p> {$post->description}</p>";
         // echo "<hr>";
-        
+
         $posts = Post::all();
 
         return view('posts.index', ['posts' => $posts]);
-        
-       
     }
 
     /**
@@ -55,7 +77,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-      
+
         // $post  = new Post;
         // $post->title = $request->title;
         // $post->subtitle = $request->subtitle;
@@ -83,9 +105,8 @@ class PostController extends Controller
         //     'subtitle'=> 'teste4',
         //     'description' => 'teste4'
         // ]);
-        
-        return redirect()->route('post.index');
 
+        return redirect()->route('post.index');
     }
 
     /**
@@ -127,7 +148,6 @@ class PostController extends Controller
         $post->save();
 
         return redirect()->route('post.index');
-
     }
 
     /**
@@ -138,6 +158,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        Post::find($post->id)->delete();
+        return redirect()->route('post.index');
     }
 }
